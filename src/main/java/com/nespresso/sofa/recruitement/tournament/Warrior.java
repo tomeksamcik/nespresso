@@ -148,20 +148,14 @@ public abstract class Warrior {
 			if (!opponent.isDead()) {
 				opponent.blow(this);
 			}
-			logger.info((rank.trim().isEmpty() ? name : rank + " " + name)
-					+ " hitPoints: "
-					+ this.getStamina()
-					+ ", "
-					+ (opponent.rank.trim().isEmpty() ? opponent.name
-							: opponent.rank + " " + opponent.name)
-					+ " hitPoints: " + opponent.getStamina());
+			logger.info(getDisplayName() + " hitPoints: " + getStamina() + ", "
+					+ opponent.getDisplayName() + " hitPoints: "
+					+ opponent.getStamina());
 		} while (!opponent.isDead() && !isDead());
 		if (isDead()) {
-			logger.info((rank.trim().isEmpty() ? name : rank + " " + name)
-					+ " defeated.");
+			logger.info(getDisplayName() + " defeated.");
 		} else if (opponent.isDead()) {
-			logger.info((opponent.rank.trim().isEmpty() ? opponent.name
-					: opponent.rank + " " + opponent.name) + " defeated.");
+			logger.info(opponent.getDisplayName() + " defeated.");
 		}
 	}
 
@@ -181,12 +175,8 @@ public abstract class Warrior {
 	 *            Warrior that receives a blow
 	 */
 	public void blow(Warrior warrior) {
-		logger.info((rank.trim().isEmpty() ? name : rank + " " + name)
-				+ " blows "
-				+ (warrior.rank.trim().isEmpty() ? warrior.name : warrior.rank
-						+ " " + warrior.name) + " ("
-				+ (rank.trim().isEmpty() ? name : rank + " " + name)
-				+ " armors: " + equipment + ")");
+		logger.info(getDisplayName() + " blows " + warrior.getDisplayName()
+				+ " (" + getDisplayName() + " armors: " + equipment + ")");
 
 		if (readyToHit()) {
 			if (!warrior.block(this)) {
@@ -242,6 +232,10 @@ public abstract class Warrior {
 	/*
 	 * Getters & Setters
 	 */
+
+	public String getDisplayName() {
+		return rank.trim().isEmpty() ? name : rank + " " + name;
+	}
 
 	public void setName(String name) {
 		this.name = name;
