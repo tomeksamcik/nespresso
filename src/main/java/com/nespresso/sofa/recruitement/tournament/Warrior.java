@@ -160,15 +160,6 @@ public abstract class Warrior {
 	}
 
 	/**
-	 * Returns hit points left in the given moment
-	 * 
-	 * @return Number of hit points lefts
-	 */
-	public Integer getStamina() {
-		return stamina;
-	}
-
-	/**
 	 * Throws a blow and incurrs given damage to the opponent
 	 * 
 	 * @param warrior
@@ -263,6 +254,10 @@ public abstract class Warrior {
 
 	public void setStamina(Integer stamina) {
 		this.stamina = stamina;
+	}
+
+	public Integer getStamina() {
+		return stamina;
 	}
 
 }
