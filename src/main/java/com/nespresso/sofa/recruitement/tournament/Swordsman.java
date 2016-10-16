@@ -9,9 +9,9 @@ public class Swordsman extends Warrior {
 		getEquipment().add("sword");
 	}
 
-	public Swordsman(String superpower) {
+	public Swordsman(String rank) {
 		this();
-		setRank(superpower);
+		setRank(rank);
 	}
 
 	@Override

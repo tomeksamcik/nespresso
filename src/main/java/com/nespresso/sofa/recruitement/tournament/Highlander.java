@@ -9,9 +9,9 @@ public class Highlander extends Warrior {
 		getEquipment().add("Great Sword");
 	}
 
-	public Highlander(String superpower) {
+	public Highlander(String rank) {
 		this();
-		setRank(superpower);
+		setRank(rank);
 	}
 
 	@Override
