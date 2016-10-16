@@ -73,7 +73,7 @@ public abstract class Warrior {
 
 	/**
 	 * Gets damage suffered from a hit given the potential damage incurred by
-	 * the attacker and owned armors (again happens to be generic to all
+	 * the attacker and worn armors (again happens to be generic to all
 	 * Warriors)
 	 * 
 	 * @param damage
@@ -140,28 +140,28 @@ public abstract class Warrior {
 	/**
 	 * Engages warrior in a battle
 	 * 
-	 * @param warrior
+	 * @param opponent
 	 */
-	public void engage(Warrior warrior) {
+	public void engage(Warrior opponent) {
 		do {
-			blow(warrior);
-			if (!warrior.isDead()) {
-				warrior.blow(this);
+			blow(opponent);
+			if (!opponent.isDead()) {
+				opponent.blow(this);
 			}
 			logger.info((rank.trim().isEmpty() ? name : rank + " " + name)
 					+ " hitPoints: "
 					+ this.getStamina()
 					+ ", "
-					+ (warrior.rank.trim().isEmpty() ? warrior.name
-							: warrior.rank + " " + warrior.name)
-					+ " hitPoints: " + warrior.getStamina());
-		} while (!warrior.isDead() && !isDead());
+					+ (opponent.rank.trim().isEmpty() ? opponent.name
+							: opponent.rank + " " + opponent.name)
+					+ " hitPoints: " + opponent.getStamina());
+		} while (!opponent.isDead() && !isDead());
 		if (isDead()) {
 			logger.info((rank.trim().isEmpty() ? name : rank + " " + name)
 					+ " defeated.");
-		} else if (warrior.isDead()) {
-			logger.info((warrior.rank.trim().isEmpty() ? warrior.name
-					: warrior.rank + " " + warrior.name) + " defeated.");
+		} else if (opponent.isDead()) {
+			logger.info((opponent.rank.trim().isEmpty() ? opponent.name
+					: opponent.rank + " " + opponent.name) + " defeated.");
 		}
 	}
 
