@@ -2,11 +2,13 @@ package com.nespresso.sofa.recruitement.tournament;
 
 public class Swordsman extends Warrior {
 
+	private final Integer INITIAL_STAMINA = 100;
+
 	public Swordsman() {
-		setStamina(100);
+		setStamina(INITIAL_STAMINA);
 		setName("Swordsman");
 		setRank("");
-		getEquipment().add("sword");
+		setWeapon(new Sword());
 	}
 
 	public Swordsman(String rank) {
@@ -15,8 +17,8 @@ public class Swordsman extends Warrior {
 	}
 
 	@Override
-	public Swordsman equip(String weapon) {
-		getEquipment().add(weapon);
+	public Swordsman equip(String name) {
+		wear(name);
 		return this;
 	}
 

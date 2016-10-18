@@ -2,11 +2,13 @@ package com.nespresso.sofa.recruitement.tournament;
 
 public class Highlander extends Warrior {
 
+	private final Integer INITIAL_STAMINA = 150;
+
 	public Highlander() {
-		setStamina(150);
+		setStamina(INITIAL_STAMINA);
 		setName("Highlander");
 		setRank("");
-		getEquipment().add("Great Sword");
+		setWeapon(new GreatSword());
 	}
 
 	public Highlander(String rank) {
@@ -15,15 +17,15 @@ public class Highlander extends Warrior {
 	}
 
 	@Override
-	public Highlander equip(String weapon) {
-		getEquipment().add(weapon);
+	public Highlander equip(String name) {
+		wear(name);
 		return this;
 	}
 
 	@Override
 	protected Integer applyRankPerks(Integer damage, Warrior victim) {
 		if (getRank() != null && getRank().equals("Veteran")
-				&& getStamina() <= 45) {
+				&& getStamina() <= 0.3 * INITIAL_STAMINA) {
 			damage *= 2;
 		}
 		return damage;

@@ -1,8 +1,5 @@
 package com.nespresso.sofa.recruitement.tournament;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -29,28 +26,53 @@ public abstract class Warrior {
 	private Integer stamina;
 
 	/**
-	 * Equipment carried by Warrior
-	 */
-	private List<String> equipment = new ArrayList<String>();
-
-	/**
 	 * Number of hits received
 	 */
 	private Integer hit = 0;
 
 	/**
-	 * Number of hits with an axe
+	 * Weapon carried by Warrior (assuming one item)
 	 */
-	private Integer bucklerAxeHit = 0;
+	private Weapon weapon;
+
+	/**
+	 * Buckler carried in hand
+	 */
+	private Buckler buckler;
+
+	/**
+	 * Worn armor
+	 */
+	private Armor armor;
 
 	/**
 	 * Equipping Warrior with an armor or weapon
 	 * 
 	 * @param armour
-	 *            Armour or weapon
+	 *            Armor or weapon
 	 * @return Armored Warrior
 	 */
 	public abstract Warrior equip(String armor);
+
+	/**
+	 * Warrior wears weapon
+	 * 
+	 * @param armor
+	 *            Armor or weapon
+	 */
+	protected void wear(String name) {
+		Weapon weapon = Weapon.getWeapon(name);
+		if (weapon != null) {
+			setWeapon(weapon);
+		} else {
+			if (name.equals("armor")) {
+				setArmor(new Armor());
+			}
+			if (name.equals("buckler")) {
+				setBuckler(new Buckler(this));
+			}
+		}
+	}
 
 	/**
 	 * Apply Warrior-specific rank bonus
@@ -67,7 +89,7 @@ public abstract class Warrior {
 	 * @return
 	 */
 	private Integer getPotentiallyIncurredDamage(Warrior victim) {
-		return applyArmorPenalty(applyRankPerks(getWeaponDamage(), victim),
+		return applyArmorPenalty(applyRankPerks(weapon.getDamage(), victim),
 				victim);
 	}
 
@@ -81,11 +103,8 @@ public abstract class Warrior {
 	 * @return Damage suffered given the armor
 	 */
 	private Integer getSufferedDamage(Integer damage) {
-		if (equipment.contains("armor")) {
-			damage -= 3;
-		}
-		if (equipment.contains("buckler") && hit % 2 == 0) {
-			damage = 0;
+		if (hasArmor()) {
+			return armor.reduceDamageReceived(damage);
 		}
 		return damage;
 	}
@@ -101,40 +120,10 @@ public abstract class Warrior {
 	 * @return Damage incurred after armor penalty
 	 */
 	private Integer applyArmorPenalty(Integer damage, Warrior victim) {
-		if (equipment.contains("armor")) {
-			damage -= 1;
+		if (hasArmor()) {
+			return armor.reduceDamageGiven(damage);
 		}
 		return damage;
-	}
-
-	/**
-	 * Returns damage incurred based on weapon, function assumes that Warrior
-	 * always selects weapon causing the greatest damage (happens to be generic
-	 * to all Warriors)
-	 * 
-	 * @return Damage incurred
-	 */
-	private Integer getWeaponDamage() {
-		int damage = 0;
-		if (equipment.contains("sword")) {
-			damage = 5;
-		}
-		if (equipment.contains("axe")) {
-			damage = 6;
-		}
-		if (equipment.contains("Great Sword")) {
-			damage = 12;
-		}
-		return damage;
-	}
-
-	/**
-	 * Am I dead yet ?
-	 * 
-	 * @return Yes or no
-	 */
-	private Boolean isDead() {
-		return getStamina() == 0;
 	}
 
 	/**
@@ -166,26 +155,31 @@ public abstract class Warrior {
 	 *            Warrior that receives a blow
 	 */
 	public void blow(Warrior warrior) {
-		logger.info(getDisplayName() + " blows " + warrior.getDisplayName()
-				+ " (" + getDisplayName() + " armors: " + equipment + ")");
+		logger.debug(getDisplayName()
+				+ " blows "
+				+ warrior.getDisplayName()
+				+ " ("
+				+ getDisplayName()
+				+ " armors: ["
+				+ ((hasArmor() ? "armor " : "") + (hasBuckler() ? "buckler"
+						: "")).trim() + "], weapon: " + weapon + ")");
 
-		if (readyToHit()) {
-			if (!warrior.block(this)) {
-				warrior.sufferDamage(warrior
-						.getSufferedDamage(getPotentiallyIncurredDamage(warrior)));
-			}
-			warrior.hit++;
+		if (weapon.readyToHit()) {
+			hit(warrior);
 		}
 	}
 
 	/**
-	 * Warrior may not be ready to hit each round for certain weapons (Warrior
-	 * type agnostic, only reliant on weapon type)
+	 * Hits opponent
 	 * 
-	 * @return Ready or not
+	 * @param warrior
 	 */
-	private Boolean readyToHit() {
-		return !(equipment.contains("Great Sword") && hit % 3 == 0);
+	private void hit(Warrior warrior) {
+		if (!warrior.block(this)) {
+			warrior.sufferDamage(warrior
+					.getSufferedDamage(getPotentiallyIncurredDamage(warrior)));
+		}
+		warrior.hit++;
 	}
 
 	/**
@@ -197,14 +191,8 @@ public abstract class Warrior {
 	 * @return Blocked or not blocked
 	 */
 	private Boolean block(Warrior attacker) {
-		if (bucklerAxeHit == 3 && equipment.contains("buckler")) {
-			equipment.remove("buckler");
-		}
-		if (equipment.contains("buckler") && hit % 2 == 0) {
-			if (attacker.equipment.contains("axe")) {
-				bucklerAxeHit++;
-			}
-			return true;
+		if (hasBuckler()) {
+			return buckler.block(attacker);
 		} else {
 			return false;
 		}
@@ -218,6 +206,33 @@ public abstract class Warrior {
 	 */
 	public void sufferDamage(Integer damage) {
 		stamina = stamina - damage >= 0 ? stamina - damage : 0;
+	}
+
+	/**
+	 * Do we have buckler ?
+	 * 
+	 * @return Yer or no
+	 */
+	private Boolean hasBuckler() {
+		return buckler != null;
+	}
+
+	/**
+	 * Do we have armor ?
+	 * 
+	 * @return Yer or no
+	 */
+	private Boolean hasArmor() {
+		return armor != null;
+	}
+
+	/**
+	 * Am I dead yet ?
+	 * 
+	 * @return Yes or no
+	 */
+	private Boolean isDead() {
+		return getStamina() == 0;
 	}
 
 	/*
@@ -240,10 +255,6 @@ public abstract class Warrior {
 		this.rank = rank;
 	}
 
-	public List<String> getEquipment() {
-		return equipment;
-	}
-
 	public Integer getHit() {
 		return hit;
 	}
@@ -258,6 +269,22 @@ public abstract class Warrior {
 
 	public Integer getStamina() {
 		return stamina;
+	}
+
+	public Weapon getWeapon() {
+		return weapon;
+	}
+
+	public void setWeapon(Weapon weapon) {
+		this.weapon = weapon;
+	}
+
+	public void setBuckler(Buckler buckler) {
+		this.buckler = buckler;
+	}
+
+	public void setArmor(Armor armor) {
+		this.armor = armor;
 	}
 
 }

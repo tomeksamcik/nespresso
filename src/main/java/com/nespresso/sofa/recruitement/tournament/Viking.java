@@ -2,16 +2,18 @@ package com.nespresso.sofa.recruitement.tournament;
 
 public class Viking extends Warrior {
 
+	private final Integer INITIAL_STAMINA = 120;
+
 	public Viking() {
-		setStamina(120);
+		setStamina(INITIAL_STAMINA);
 		setName("Viking");
 		setRank("");
-		getEquipment().add("axe");
+		setWeapon(new Axe());
 	}
 
 	@Override
-	public Viking equip(String weapon) {
-		getEquipment().add(weapon);
+	public Viking equip(String name) {
+		wear(name);
 		return this;
 	}
 
