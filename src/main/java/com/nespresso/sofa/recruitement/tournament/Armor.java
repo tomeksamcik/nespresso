@@ -2,14 +2,9 @@ package com.nespresso.sofa.recruitement.tournament;
 
 public class Armor {
 
-	private final Integer reduceDamageReceivedBy;
+	private final Integer reduceDamageReceivedBy = 3;
 
-	private final Integer reduceDamageGivenBy;
-
-	public Armor() {
-		reduceDamageReceivedBy = 3;
-		reduceDamageGivenBy = 1;
-	}
+	private final Integer reduceDamageGivenBy = 1;
 
 	public Integer reduceDamageReceived(Integer damage) {
 		return damage - reduceDamageReceivedBy;
