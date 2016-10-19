@@ -13,23 +13,31 @@ public class Buckler {
 	}
 
 	/**
-	 * Performs a block if possible and wears up buckler
+	 * Uses up buckler during defend
 	 * 
 	 * @param attacker
-	 *            Attacker to block from
-	 * @return True if block is possible in the given round, false otherwise
+	 *            Attacker
 	 */
-	public Boolean block(Warrior attacker) {
-		if (hit++ % 2 == 0) {
-			if (attacker.getWeapon() instanceof Axe) {
-				bucklerAxeHit++;
-				if (bucklerAxeHit == 3) {
-					owner.setBuckler(null);
-				}
+	public void block(Warrior attacker) {
+		if (attacker.getWeapon() instanceof Axe) {
+			bucklerAxeHit++;
+			if (bucklerAxeHit == 3) {
+				owner.setBuckler(null);
 			}
+		}
+	}
+
+	/**
+	 * Checks if buckler is ready to use in this round
+	 * 
+	 * @return Yes or no
+	 */
+	public Boolean canBlock() {
+		if (hit++ % 2 == 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
+
 }

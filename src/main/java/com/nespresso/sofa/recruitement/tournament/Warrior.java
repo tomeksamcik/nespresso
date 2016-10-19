@@ -173,13 +173,25 @@ public abstract class Warrior {
 	 * Hits opponent
 	 * 
 	 * @param warrior
+	 *            Attacker
 	 */
 	private void hit(Warrior warrior) {
-		if (!warrior.block(this)) {
+		if (!warrior.canBlock(this)) {
 			warrior.sufferDamage(warrior
 					.getSufferedDamage(getPotentiallyIncurredDamage(warrior)));
+		} else {
+			warrior.block(this);
 		}
 		warrior.hit++;
+	}
+
+	/**
+	 * Blocks attack with a buckler
+	 * 
+	 * @param attacker
+	 */
+	private void block(Warrior attacker) {
+		buckler.block(attacker);
 	}
 
 	/**
@@ -190,9 +202,9 @@ public abstract class Warrior {
 	 *            Attacker being blocked
 	 * @return Blocked or not blocked
 	 */
-	private Boolean block(Warrior attacker) {
+	private Boolean canBlock(Warrior attacker) {
 		if (hasBuckler()) {
-			return buckler.block(attacker);
+			return buckler.canBlock();
 		} else {
 			return false;
 		}
