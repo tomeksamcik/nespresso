@@ -180,18 +180,9 @@ public abstract class Warrior {
 			warrior.sufferDamage(warrior
 					.getSufferedDamage(getPotentiallyIncurredDamage(warrior)));
 		} else {
-			warrior.block(this);
+			warrior.getBuckler().block(this);
 		}
 		warrior.hit++;
-	}
-
-	/**
-	 * Blocks attack with a buckler
-	 * 
-	 * @param attacker
-	 */
-	private void block(Warrior attacker) {
-		buckler.block(attacker);
 	}
 
 	/**
@@ -285,6 +276,10 @@ public abstract class Warrior {
 
 	public void setWeapon(Weapon weapon) {
 		this.weapon = weapon;
+	}
+
+	public Buckler getBuckler() {
+		return buckler;
 	}
 
 	public void setBuckler(Buckler buckler) {
