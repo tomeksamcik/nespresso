@@ -33,11 +33,7 @@ public class Buckler {
 	 * @return Yes or no
 	 */
 	public Boolean canBlock() {
-		if (hit++ % 2 == 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return hit++ % 2 == 0;
 	}
 
 }

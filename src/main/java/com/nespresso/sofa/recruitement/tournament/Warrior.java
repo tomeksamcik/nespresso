@@ -203,11 +203,7 @@ public abstract class Warrior {
 	 * @return Blocked or not blocked
 	 */
 	private Boolean canBlock(Warrior attacker) {
-		if (hasBuckler()) {
-			return buckler.canBlock();
-		} else {
-			return false;
-		}
+		return hasBuckler() && buckler.canBlock();
 	}
 
 	/**
@@ -216,7 +212,7 @@ public abstract class Warrior {
 	 * @param incurredDamage
 	 *            Number of story points lost
 	 */
-	public void sufferDamage(Integer damage) {
+	private void sufferDamage(Integer damage) {
 		stamina = stamina - damage >= 0 ? stamina - damage : 0;
 	}
 
