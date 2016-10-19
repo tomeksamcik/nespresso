@@ -11,4 +11,9 @@ public class Axe extends Weapon {
 		return true;
 	}
 
+	@Override
+	public Boolean canBreakBuckler() {
+		return true;
+	}
+
 }

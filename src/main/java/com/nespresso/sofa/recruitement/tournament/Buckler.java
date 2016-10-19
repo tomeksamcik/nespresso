@@ -19,7 +19,7 @@ public class Buckler {
 	 *            Attacker
 	 */
 	public void block(Warrior attacker) {
-		if (attacker.getWeapon() instanceof Axe) {
+		if (attacker.getWeapon().canBreakBuckler()) {
 			bucklerAxeHit++;
 			if (bucklerAxeHit == 3) {
 				owner.setBuckler(null);

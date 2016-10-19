@@ -13,4 +13,9 @@ public class GreatSword extends Weapon {
 		return ++hit % 3 != 0;
 	}
 
+	@Override
+	public Boolean canBreakBuckler() {
+		return false;
+	}
+
 }

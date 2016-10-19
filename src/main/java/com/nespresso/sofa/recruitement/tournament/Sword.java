@@ -11,4 +11,9 @@ public class Sword extends Weapon {
 		return true;
 	}
 
+	@Override
+	public Boolean canBreakBuckler() {
+		return false;
+	}
+
 }

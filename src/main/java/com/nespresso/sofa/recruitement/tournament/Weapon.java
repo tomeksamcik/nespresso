@@ -31,6 +31,13 @@ public abstract class Weapon {
 	 */
 	public abstract Boolean readyToHit();
 
+	/**
+	 * Checks if weapon can break buckler
+	 * 
+	 * @return True of false
+	 */
+	public abstract Boolean canBreakBuckler();
+
 	public Integer getDamage() {
 		return damage;
 	}
